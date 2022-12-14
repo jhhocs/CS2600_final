@@ -6,7 +6,7 @@
 char board[3][3];
 char symbol[2] = {'O', 'X'};
 int player;
-int turn = 9;
+int turn = 10;
 
 void printBoard() {
     printf("Current Board:\n");
@@ -69,7 +69,7 @@ void saveGameState() {
             fprintf(file, "%c", board[i][j]);
         }
     }
-
+    fclose(file);
 }
 
 int updateBoard(int position) {
@@ -99,7 +99,6 @@ int updateBoard(int position) {
         board[x][y] = symbol[player - 1];
         return 1;
     }
-    printf("Square taken!\n");
     return -1;
 }
 
@@ -113,15 +112,28 @@ void switchTurns() {
 }
 
 int main(int argc, char *argv[]) {
+    
+    //Start new game
+    if(argc == 2 && atoi(argv[1]) == 0) {
+        printf("New game!\n");
+        resetGame();
+        saveGameState();
+        return 0;
+    }
+    else if(argc == 2 && atoi(argv[1]) != 0) {
+        printf("Invalid input.\n");
+        return -1;
+    }
+
     FILE *file;
 
     player = atoi(argv[1]);
 
     //Check if there is an existing game. If so, open the file
-    if(file = fopen("gameState.txt", "r")) {
-        printf("Board found\n");
+    if((file = fopen("gameState.txt", "r"))) {
         char nextChar;
 
+        //Retrieve player turn from gameState.txt
         int playerTurn;
         if(fgetc(file) == 49) {
             playerTurn = 1;
@@ -130,6 +142,7 @@ int main(int argc, char *argv[]) {
             playerTurn = 2;
         }
 
+        //Check if it is the player's turn
         if(playerTurn != player) {
             printf("Player %d tried to make a move on Player %d's turn\n", player, playerTurn);
             return -1;
@@ -139,7 +152,7 @@ int main(int argc, char *argv[]) {
                 
                 nextChar = fgetc(file);
 
-                if(nextChar == "") {
+                if(nextChar == ' ') {
                     turn -= 1;
                     nextChar = ' ';
                 }
@@ -148,19 +161,23 @@ int main(int argc, char *argv[]) {
         }
         fclose(file);
     }
-    if(atoi(argv[2]) == 0) {
-        printf("New game!\n");
-        resetGame();
-        saveGameState();
-        return 0;
-    }
 
     if (updateBoard(atoi(argv[2])) == -1) {
         return -1;
     }
+    printf("Turn: %d\n", turn);
 
     if(checkWin() != ' ') {
+        printf("Player %d wins!\n", player);
+        printBoard();
+        saveGameState();
         return player;
+    }
+    if(turn == 9) {
+        printf("Tie");
+        printBoard();
+        saveGameState();
+        return 3;
     }
 
     switchTurns();
