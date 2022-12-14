@@ -52,7 +52,7 @@ char checkWin() {
             }
         }
         if(i == 2) {
-            if(board[i][i] == board[i][i + 1] && board[i][i] == board[i][i + 2] || 
+            if(board[i][i] == board[i][i - 1] && board[i][i] == board[i][i - 2] || 
             board[i][i] == board[i - 1][i] && board[i][i] == board[i - 2][i]) {
                 return board[i][i];
             }
