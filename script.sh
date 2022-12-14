@@ -4,11 +4,12 @@ broker="test.mosquitto.org"
 startTopic="ticTacToe/gameStart"
 gameStateTopic="ticTacToe/gameState"
 player1Move="ticTacToe/p1Move"
-directory="~/Documents/CS2600_final"
 gameStarted=1
 output=-1
 autoplay=0
-cd ~/Documents/CS2600_final
+
+cd ~/Documents/CS2600_final #Opens directory where TicTacToe.c is located
+                            #Daemon process opens a new terminal which runs this script.
 
 gcc TicTacToe.c -o ticTacToe
 
