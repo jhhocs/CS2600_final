@@ -14,11 +14,8 @@ while(($gameStarted == 0))
 do
     msg=$(mosquitto_sub -h $broker -C 1 -t $startTopic)
     if ((msg == 1)); then #Makes sure a 1 is recieved
-        #./TicTacToe 0
         gameStarted=1
-        #fileContent=$(head -c 10 gameState.txt)
-        #mosquitto_pub -h $broker -t $gameStateTopic -m "$fileContent"
-        open -a Terminal ~/Documents/CS2600_final/script.sh
+        open -a Terminal ~/Documents/CS2600_final/script.sh #Path to where script.sh is located on my machine
     fi
 done
 
